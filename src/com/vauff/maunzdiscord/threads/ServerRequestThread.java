@@ -136,13 +136,19 @@ public class ServerRequestThread implements Runnable
 				name = serverInfo.get("serverName").toString();
 
 			if (serverInfo.containsKey("numberOfPlayers") && !Objects.isNull(serverInfo.get("numberOfPlayers")))
-				currentPlayers = ((Byte) serverInfo.get("numberOfPlayers")).intValue();
+				currentPlayers = Integer.parseInt(serverInfo.get("numberOfPlayers").toString());
 
 			if (serverInfo.containsKey("maxPlayers") && !Objects.isNull(serverInfo.get("maxPlayers")))
-				maxPlayers = ((Byte) serverInfo.get("maxPlayers")).intValue();
+				maxPlayers = Integer.parseInt(serverInfo.get("maxPlayers").toString());
 
 			if (currentPlayers > maxPlayers && maxPlayers >= 0)
 				currentPlayers = maxPlayers;
+
+			if (maxPlayers < 0)
+				maxPlayers = maxPlayers * -1;
+
+			if (currentPlayers < 0)
+				currentPlayers = currentPlayers * -1;
 
 			String playerCount = currentPlayers + "/" + maxPlayers;
 

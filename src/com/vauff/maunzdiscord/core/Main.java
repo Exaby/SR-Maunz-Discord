@@ -4,7 +4,6 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.vauff.maunzdiscord.commands.*;
 import com.vauff.maunzdiscord.commands.templates.AbstractCommand;
-import com.vauff.maunzdiscord.timers.MapImageTimer;
 import com.vauff.maunzdiscord.timers.ServerTimer;
 import com.vauff.maunzdiscord.timers.StatsTimer;
 import discord4j.core.DiscordClient;
@@ -115,7 +114,6 @@ public class Main
 			gateway.on(ChatInputInteractionEvent.class, event -> Mono.fromRunnable(() -> MainListener.onChatInputInteraction(event))).subscribe();
 			gateway.on(ButtonInteractionEvent.class, event -> Mono.fromRunnable(() -> MainListener.onButtonInteraction(event))).subscribe();
 
-			Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(MapImageTimer.timer, 0, 1, TimeUnit.HOURS);
 			Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(StatsTimer.timer, 0, 5, TimeUnit.MINUTES);
 			Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(ServerTimer.timer, 10, 60, TimeUnit.SECONDS);
 
@@ -133,24 +131,13 @@ public class Main
 	 */
 	private static void setupCommands()
 	{
-		commands.add(new About());
-		commands.add(new Benchmark());
-		commands.add(new Changelog());
-		commands.add(new Colour());
 		commands.add(new Help());
-		commands.add(new Invite());
 		commands.add(new IsItDown());
 		commands.add(new Map());
-		commands.add(new Minecraft());
 		commands.add(new Notify());
-		commands.add(new Ping());
 		commands.add(new Players());
-		commands.add(new Reddit());
-		commands.add(new Say());
 		commands.add(new Servers());
 		commands.add(new Services());
-		commands.add(new Steam());
-		commands.add(new Stop());
 		commands.sort(Comparator.comparing(AbstractCommand::getName));
 
 		RestClient restClient = gateway.getRestClient();

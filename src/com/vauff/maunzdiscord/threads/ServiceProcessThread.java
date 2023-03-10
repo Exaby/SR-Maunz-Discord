@@ -94,24 +94,16 @@ public class ServiceProcessThread implements Runnable
 
 			if (!map.equals("") && !doc.getString("lastMap").equalsIgnoreCase(map))
 			{
-				String url = Util.getMapImageURL(map, serverDoc.getInteger("appId"));
+				String url = Util.getMapImageURL(map);
 
 				EmbedCreateSpec embed = EmbedCreateSpec.builder()
 					.color(Util.averageColorFromURL(url, true))
-					.timestamp(Instant.ofEpochMilli(timestamp))
-					.description("Now Playing: **" + map.replace("_", "\\_") + "**\nPlayers Online: **" + playerCount + "**\nQuick Join: **steam://connect/" + serverDoc.getString("ip") + ":" + serverDoc.getInteger("port") + "**")
+					.title("**"+ name + "**\nNow Playing: **" + map.replace("_", "\\_") + "** with **" + playerCount + "** players\n" + "steam://connect/" + serverDoc.getString("ip") + ":" + serverDoc.getInteger("port"))
+					.image(url)
 					.build();
-
-				if (!url.equals(""))
-					embed = embed.withThumbnail(url);
-
-				EmbedCreateSpec titledEmbed = embed.withTitle(name);
 
 				if (channelExists(doc.getLong("channelID")))
 				{
-					if (Util.isMultiTrackingChannel(doc.getLong("guildID"), doc.getLong("channelID")) || doc.getBoolean("alwaysShowName"))
-						Util.msg((MessageChannel) Main.gateway.getChannelById(Snowflake.of(doc.getLong("channelID"))).block(), true, titledEmbed);
-					else
 						Util.msg((MessageChannel) Main.gateway.getChannelById(Snowflake.of(doc.getLong("channelID"))).block(), true, embed);
 				}
 
@@ -135,7 +127,7 @@ public class ServiceProcessThread implements Runnable
 								continue parentLoop;
 							}
 
-							Util.msg(member.getPrivateChannel().block(), true, titledEmbed);
+							Util.msg(member.getPrivateChannel().block(), true, embed);
 							break;
 						}
 					}
